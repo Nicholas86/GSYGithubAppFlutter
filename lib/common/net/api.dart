@@ -51,6 +51,7 @@ class HttpManager {
     }
 
     resultError(DioError e) {
+      print('请求数据异常, ${e}');
       Response errorResponse;
       if (e.response != null) {
         errorResponse = e.response;
@@ -63,15 +64,19 @@ class HttpManager {
       return new ResultData(Code.errorHandleFunction(errorResponse.statusCode, e.message, noTip), false, errorResponse.statusCode);
     }
 
+    // 发起网络请求
     Response response;
+
     try {
       response = await _dio.request(url, data: params, options: option);
     } on DioError catch (e) {
       return resultError(e);
     }
+
     if(response.data is DioError) {
       return resultError(response.data);
     }
+
     return response.data;
   }
 

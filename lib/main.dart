@@ -56,7 +56,6 @@ class FlutterReduxApp extends StatelessWidget {
       store: store,
       child: new StoreBuilder<GSYState>(builder: (context, store) {
         return new MaterialApp(
-
             ///多语言实现代理
             localizationsDelegates: [
               GlobalMaterialLocalizations.delegate,

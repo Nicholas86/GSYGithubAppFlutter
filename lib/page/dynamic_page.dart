@@ -79,6 +79,7 @@ class _DynamicPageState extends State<DynamicPage>
     ///请求更新
     if (dynamicBloc.getDataLength() == 0) {
       dynamicBloc.changeNeedHeaderStatus(false);
+      print('请求动态列表数据');
       ///先读数据库
       dynamicBloc.requestRefresh(_getStore().state.userInfo?.login,
           doNextFlag: false).then((_) {

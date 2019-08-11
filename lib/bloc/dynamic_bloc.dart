@@ -14,6 +14,7 @@ class DynamicBloc {
 
   requestRefresh(String userName, {doNextFlag = true}) async {
     pageReset();
+    print('请求动态列表数据, userName: ${userName}');
     var res = await EventDao.getEventReceived(userName, page: _page, needDb: true);
     changeLoadMoreStatus(getLoadMoreStatus(res));
     refreshData(res);

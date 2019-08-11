@@ -56,6 +56,7 @@ class HomePage extends StatelessWidget {
     ///增加返回按键监听
     return WillPopScope(
       onWillPop: () {
+        print('返回按钮');
         return _dialogExitApp(context);
       },
       child: new GSYTabBarWidget(
@@ -63,17 +64,18 @@ class HomePage extends StatelessWidget {
         type: GSYTabBarWidget.BOTTOM_TAB,
         tabItems: tabs,
         tabViews: [
-          new DynamicPage(),
-          new TrendPage(),
-          new MyPage(),
+          new DynamicPage(), // 动态
+          new TrendPage(), // 趋势
+          new MyPage(), // 我的
         ],
         backgroundColor: GSYColors.primarySwatch,
         indicatorColor: Color(GSYColors.white),
-        title: GSYTitleBar(
+        title: GSYTitleBar( // 标题导航
           GSYLocalizations.of(context).currentLocalized.app_name,
           iconData: GSYICons.MAIN_SEARCH,
           needRightLocalIcon: true,
           onPressed: () {
+            print('跳转到搜索页面');
             NavigatorUtils.goSearchPage(context);
           },
         ),

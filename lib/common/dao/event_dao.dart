@@ -9,6 +9,7 @@ import 'package:gsy_github_app_flutter/common/net/api.dart';
 import 'package:redux/redux.dart';
 
 class EventDao {
+
   static getEventReceived(String userName, {page = 1, bool needDb = false}) async {
     if (userName == null) {
       return null;
@@ -19,18 +20,23 @@ class EventDao {
       String url = Address.getEventReceived(userName) + Address.getPageParams("?", page);
 
       var res = await httpManager.netFetch(url, null, null, null);
+      print('请求动态列表数据, res: ${res}');
       if (res != null && res.result) {
         List<Event> list = new List();
         var data = res.data;
         if (data == null || data.length == 0) {
           return null;
         }
+
+        // 插入数据库
         if (needDb) {
           await provider.insert(json.encode(data));
         }
+
         for (int i = 0; i < data.length; i++) {
           list.add(Event.fromJson(data[i]));
         }
+
         return new DataResult(list, true);
       } else {
         return new DataResult(null, false);
