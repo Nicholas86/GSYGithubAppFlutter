@@ -12,9 +12,9 @@ class DynamicBloc {
 
   int _page = 1;
 
+  /// 刷新数据
   requestRefresh(String userName, {doNextFlag = true}) async {
-    pageReset();
-    print('请求动态列表数据, userName: ${userName}');
+    pageReset(); /// 页数重置
     var res = await EventDao.getEventReceived(userName, page: _page, needDb: true);
     changeLoadMoreStatus(getLoadMoreStatus(res));
     refreshData(res);
@@ -24,19 +24,21 @@ class DynamicBloc {
     return res;
   }
 
+  /// 加载更多数据
   requestLoadMore(String userName) async {
-    pageUp();
+    pageUp(); /// 页数加1
     var res = await EventDao.getEventReceived(userName, page: _page);
     changeLoadMoreStatus(getLoadMoreStatus(res));
     loadMoreData(res);
     return res;
   }
 
-
+  /// 重置页数, _page = 1
   pageReset() {
     _page = 1;
   }
 
+  /// 页数相加
   pageUp() {
     _page++;
   }

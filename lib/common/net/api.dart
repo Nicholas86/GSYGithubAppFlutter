@@ -73,7 +73,7 @@ class HttpManager {
       return resultError(e);
     }
 
-    if(response.data is DioError) {
+    if(response.data is DioError) { /// 数据异常
       return resultError(response.data);
     }
 

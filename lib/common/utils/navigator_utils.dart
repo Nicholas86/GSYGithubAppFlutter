@@ -42,6 +42,7 @@ class NavigatorUtils {
 
   ///登录页
   static goLogin(BuildContext context) {
+    print('>>>>>>>>>>>>>>> 跳转到登录页 <<<<<<<<<<<<<<<<<<');
     Navigator.pushReplacementNamed(context, LoginPage.sName);
   }
 

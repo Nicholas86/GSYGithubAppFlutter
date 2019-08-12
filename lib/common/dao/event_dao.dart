@@ -16,11 +16,14 @@ class EventDao {
     }
     ReceivedEventDbProvider provider = new ReceivedEventDbProvider();
 
+    print('请求动态列表数据, userName: ${userName}');
+
+    /// 异步网络请求数据
     next() async {
       String url = Address.getEventReceived(userName) + Address.getPageParams("?", page);
 
       var res = await httpManager.netFetch(url, null, null, null);
-      print('请求动态列表数据, res: ${res}');
+      print('请求动态列表数据成功, res: ${res.result}');
       if (res != null && res.result) {
         List<Event> list = new List();
         var data = res.data;
@@ -28,7 +31,7 @@ class EventDao {
           return null;
         }
 
-        // 插入数据库
+        // 第一页数据入库
         if (needDb) {
           await provider.insert(json.encode(data));
         }
@@ -43,14 +46,17 @@ class EventDao {
       }
     }
 
+    /// 先返回本地数据库数据
     if (needDb) {
       List<Event> dbList = await provider.getEvents();
+      print('先返回本地数据库数据, dbList: ${dbList}');
       if (dbList == null || dbList.length == 0) {
         return await next();
       }
       DataResult dataResult = new DataResult(dbList, true, next: next);
       return dataResult;
     }
+
     return await next();
   }
 

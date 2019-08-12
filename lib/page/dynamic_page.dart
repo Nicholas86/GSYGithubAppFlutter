@@ -39,22 +39,24 @@ class _DynamicPageState extends State<DynamicPage>
     });
   }
 
-  ///下拉刷新数据
+  /// 下拉刷新数据
   Future<void> requestRefresh() async {
     //await Future.delayed(Duration(seconds: 1));
     return await dynamicBloc.requestRefresh(_getStore().state.userInfo?.login);
   }
 
-  ///上拉更多请求数据
+  /// 上拉更多请求数据
   Future<void> requestLoadMore() async {
     return await dynamicBloc.requestLoadMore(_getStore().state.userInfo?.login);
   }
 
+  // 布局
   _renderEventItem(Event e) {
     EventViewModel eventViewModel = EventViewModel.fromEventMap(e);
     return new EventItem(
       eventViewModel,
       onPressed: () {
+        print('按钮， 单元格触发事件, event.type: ${e.type}');
         EventUtils.ActionUtils(context, e, "");
       },
     );
@@ -66,6 +68,8 @@ class _DynamicPageState extends State<DynamicPage>
 
   @override
   void initState() {
+    print('>>>>>>>>>>>>>>>>>>>>>> initState <<<<<<<<<<<<<<<<<<<<');
+
     super.initState();
     ///监听生命周期，主要判断页面 resumed 的时候触发刷新
     WidgetsBinding.instance.addObserver(this);
@@ -76,13 +80,15 @@ class _DynamicPageState extends State<DynamicPage>
 
   @override
   void didChangeDependencies() {
+    print('>>>>>>>>>>>>>>>>>>>>>> didChangeDependencies <<<<<<<<<<<<<<<<<<<<');
     ///请求更新
     if (dynamicBloc.getDataLength() == 0) {
       dynamicBloc.changeNeedHeaderStatus(false);
       print('请求动态列表数据');
-      ///先读数据库
+      /// 先读数据库
       dynamicBloc.requestRefresh(_getStore().state.userInfo?.login,
           doNextFlag: false).then((_) {
+            // print(' showRefreshLoading');
         showRefreshLoading();
       });
 
@@ -93,6 +99,8 @@ class _DynamicPageState extends State<DynamicPage>
   ///监听生命周期，主要判断页面 resumed 的时候触发刷新
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('>>>>>>>>>>>>>>>>>>>>>> didChangeAppLifecycleState <<<<<<<<<<<<<<<<<<<<');
+
     if (state == AppLifecycleState.resumed) {
       if (dynamicBloc.getDataLength() != 0) {
         showRefreshLoading();
@@ -105,6 +113,7 @@ class _DynamicPageState extends State<DynamicPage>
 
   @override
   void dispose() {
+    print('>>>>>>>>>>>>>>>>>>>>>> dispose <<<<<<<<<<<<<<<<<<<<');
     WidgetsBinding.instance.removeObserver(this);
     dynamicBloc.dispose();
     super.dispose();
@@ -112,9 +121,12 @@ class _DynamicPageState extends State<DynamicPage>
 
   @override
   Widget build(BuildContext context) {
+    print('>>>>>>>>>>>>>>>>>>>>>> build <<<<<<<<<<<<<<<<<<<<');
+
     super.build(context); // See AutomaticKeepAliveClientMixin.
     return GSYPullLoadWidget(
       dynamicBloc.pullLoadWidgetControl,
+      // 列表单元格, 根据数据源动态创建
       (BuildContext context, int index) =>
           _renderEventItem(dynamicBloc.dataList[index]),
       requestRefresh,
