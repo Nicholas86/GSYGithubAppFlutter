@@ -44,7 +44,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   initParams() async {
+    /// 获取本地缓存的用户名
     _userName = await LocalStorage.get(Config.USER_NAME_KEY);
+    /// 获取本地缓存的密码
     _password = await LocalStorage.get(Config.PW_KEY);
     userController.value = new TextEditingValue(text: _userName ?? "");
     pwController.value = new TextEditingValue(text: _password ?? "");
@@ -68,24 +70,35 @@ class _LoginPageState extends State<LoginPage> {
               child: SafeArea(
                 ///同时弹出键盘不遮挡
                 child: SingleChildScrollView(
+                  /// 卡片视图
                   child: new Card(
                     elevation: 5.0,
+                    /// 圆角
                     shape: new RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10.0))),
                     color: Color(GSYColors.cardWhite),
+                    /// 左、右间距
                     margin: const EdgeInsets.only(left: 30.0, right: 30.0),
+                    /// 内边距
                     child: new Padding(
                       padding: new EdgeInsets.only(
                           left: 30.0, top: 40.0, right: 30.0, bottom: 0.0),
                       child: new Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
+
                         children: <Widget>[
+                          /// 图片
                           new Image(
+                              color: Colors.red,
                               image: new AssetImage(GSYICons.DEFAULT_USER_ICON),
                               width: 90.0,
                               height: 90.0),
+
+                          /// 加空白间距
                           new Padding(padding: new EdgeInsets.all(10.0)),
+
+                          /// 输入控件
                           new GSYInputWidget(
                             hintText: CommonUtils.getLocale(context)
                                 .login_username_hint_text,
@@ -95,7 +108,11 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             controller: userController,
                           ),
+
+                          /// 加空白间距
                           new Padding(padding: new EdgeInsets.all(10.0)),
+
+                          /// 输入控件
                           new GSYInputWidget(
                             hintText: CommonUtils.getLocale(context)
                                 .login_password_hint_text,
@@ -106,19 +123,27 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             controller: pwController,
                           ),
+
+                          /// 加空白间距
                           new Padding(padding: new EdgeInsets.all(30.0)),
+
+                          /// 自定义登录按钮
                           new GSYFlexButton(
                             text: CommonUtils.getLocale(context).login_text,
                             color: Theme.of(context).primaryColor,
                             textColor: Color(GSYColors.textWhite),
                             onPress: () {
+                              print('点击登录按钮');
                               if (_userName == null || _userName.length == 0) {
                                 return;
                               }
                               if (_password == null || _password.length == 0) {
                                 return;
                               }
+
+                              /// 显示加载视图
                               CommonUtils.showLoadingDialog(context);
+
                               UserDao.login(
                                       _userName.trim(), _password.trim(), store)
                                   .then((res) {
@@ -126,11 +151,14 @@ class _LoginPageState extends State<LoginPage> {
                                 if (res != null && res.result) {
                                   new Future.delayed(const Duration(seconds: 1),
                                       () {
+                                    /// 去主页
+                                   print('去主页');
                                     NavigatorUtils.goHome(context);
                                     return true;
                                   });
                                 }
                               });
+
                             },
                           ),
                           new Padding(padding: new EdgeInsets.all(15.0)),

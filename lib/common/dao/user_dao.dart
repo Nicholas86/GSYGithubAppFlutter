@@ -21,6 +21,7 @@ import 'package:gsy_github_app_flutter/common/utils/common_utils.dart';
 import 'package:redux/redux.dart';
 
 class UserDao {
+
   static login(userName, password, store) async {
     String type = userName + ":" + password;
     var bytes = utf8.encode(type);
@@ -28,7 +29,10 @@ class UserDao {
     if (Config.DEBUG) {
       print("base64Str login " + base64Str);
     }
+
+    /// 保存用户名
     await LocalStorage.save(Config.USER_NAME_KEY, userName);
+    /// 保存密码
     await LocalStorage.save(Config.USER_BASIC_CODE, base64Str);
 
     Map requestParams = {
@@ -37,8 +41,11 @@ class UserDao {
       "client_id": NetConfig.CLIENT_ID,
       "client_secret": NetConfig.CLIENT_SECRET
     };
+
+    /// 清空认证token
     httpManager.clearAuthorization();
 
+    /// 请求登录数据
     var res = await httpManager.netFetch(Address.getAuthorization(), json.encode(requestParams), null, new Options(method: "post"));
     var resultData = null;
     if (res != null && res.result) {
