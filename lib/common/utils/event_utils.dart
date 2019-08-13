@@ -10,6 +10,7 @@ import 'package:gsy_github_app_flutter/common/utils/navigator_utils.dart';
  * Date: 2018-07-16
  */
 class EventUtils {
+
   ///事件描述与动作
   static getActionAndDes(Event event) {
     String actionStr;
@@ -130,12 +131,14 @@ class EventUtils {
     String owner = event.repo.name.split("/")[0];
     String repositoryName = event.repo.name.split("/")[1];
     String fullName = owner + '/' + repositoryName;
+
     switch (event.type) {
       case 'ForkEvent':
         String forkName = event.actor.login + "/" + repositoryName;
         if (forkName.toLowerCase() == currentRepository.toLowerCase()) {
           return;
         }
+        print('>>>>>>>>>>> 跳转到仓库详情, type: ${event.type}, repositoryName:${repositoryName}');
         NavigatorUtils.goReposDetail(context, event.actor.login, repositoryName);
         break;
       case 'PushEvent':
@@ -143,8 +146,10 @@ class EventUtils {
           if (fullName.toLowerCase() == currentRepository.toLowerCase()) {
             return;
           }
+          print('>>>>>>>>>>> 跳转到仓库详情, type: ${event.type}, repositoryName:${repositoryName}');
           NavigatorUtils.goReposDetail(context, owner, repositoryName);
         } else if (event.payload.commits.length == 1) {
+          print('>>>>>>>>>>> 跳转到提交详情, type: ${event.type}, repositoryName:${repositoryName}');
           NavigatorUtils.goPushDetailPage(context, owner, repositoryName, event.payload.commits[0].sha, true);
         } else {
           List<String> list = new List();
@@ -152,22 +157,27 @@ class EventUtils {
             list.add(event.payload.commits[i].message + " " + event.payload.commits[i].sha.substring(0, 4));
           }
           CommonUtils.showCommitOptionDialog(context, list, (index) {
+            print('>>>>>>>>>>> 跳转到提交详情, type: ${event.type}, repositoryName:${repositoryName}');
             NavigatorUtils.goPushDetailPage(context, owner, repositoryName, event.payload.commits[index].sha, true);
           });
         }
         break;
       case 'ReleaseEvent':
         String url = event.payload.release.tarballUrl;
+        print('>>>>>>>>>>> 跳转到launchWebView, type: ${event.type}, repositoryName:${repositoryName}');
         CommonUtils.launchWebView(context, repositoryName, url);
         break;
       case 'IssueCommentEvent':
       case 'IssuesEvent':
-        NavigatorUtils.goIssueDetail(context, owner, repositoryName, event.payload.issue.number.toString(), needRightLocalIcon: true);
+      print('>>>>>>>>>>> 跳转到issue详情, type: ${event.type}, repositoryName:${repositoryName}');
+      NavigatorUtils.goIssueDetail(context, owner, repositoryName, event.payload.issue.number.toString(), needRightLocalIcon: true);
         break;
       default:
         if (fullName.toLowerCase() == currentRepository.toLowerCase()) {
           return;
         }
+        print('>>>>>>>>>>> 默认跳转到仓库详情, type: ${event.type}, repositoryName:${repositoryName}');
+
         NavigatorUtils.goReposDetail(context, owner, repositoryName);
         break;
     }

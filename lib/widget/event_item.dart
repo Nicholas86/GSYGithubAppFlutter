@@ -46,15 +46,20 @@ class EventItem extends StatelessWidget {
               NavigatorUtils.goPerson(context, eventViewModel.actionUser);
             })
         : Container();
+
     return new Container(
       child: new GSYCardItem(
+         // 卡片里面盛放按钮
           child: new FlatButton(
+            // 按钮触发事件
               onPressed: onPressed,
+              // 布局内部视图
               child: new Padding(
                 padding: new EdgeInsets.only(left: 0.0, top: 10.0, right: 0.0, bottom: 10.0),
                 child: new Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
+                    // 图片、标题、时间
                     new Row(
                       children: <Widget>[
                         userImage,
@@ -62,6 +67,7 @@ class EventItem extends StatelessWidget {
                         new Text(eventViewModel.actionTime, style: GSYConstant.smallSubText),
                       ],
                     ),
+                    // 文本内容
                     new Container(
                         child: new Text(eventViewModel.actionTarget, style: GSYConstant.smallTextBold),
                         margin: new EdgeInsets.only(top: 6.0, bottom: 2.0),
@@ -85,6 +91,7 @@ class EventViewModel {
     actionTime = CommonUtils.getNewsTimeStr(event.createdAt);
     actionUser = event.actor.login;
     actionUserPic = event.actor.avatar_url;
+    /// 用户点击动作
     var other = EventUtils.getActionAndDes(event);
     actionDes = other["des"];
     actionTarget = other["actionStr"];

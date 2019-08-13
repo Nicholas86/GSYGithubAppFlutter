@@ -24,6 +24,7 @@ class GSYCardItem extends StatelessWidget {
     margin ??= EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0, bottom: 10.0);
     shape ??= new RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4.0)));
     color ??= new Color(GSYColors.cardWhite);
+    // 卡片布局, 切圆角
     return new Card(elevation: elevation, shape: shape, color: color, margin: margin, child: child);
   }
 }
